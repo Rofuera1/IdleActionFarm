@@ -57,6 +57,47 @@ public static class Coroutines
         }
     }*/
 
+    public static IEnumerator LerpLocalPosition(Transform obj, Vector3 endLocalPosition, float time, whatFuncToUse func)
+    {
+        Vector3 startLocalPosition = endLocalPosition;
+        float t = 0f;
+
+        while(t < time)
+        {
+            t += Time.deltaTime;
+
+            obj.transform.localPosition = Vector3.Lerp(startLocalPosition, endLocalPosition, func(0f, 1f, t / time));
+
+            yield return null;
+        }
+
+        obj.transform.localPosition = endLocalPosition;
+    }
+
+    public static IEnumerator SetActiveAfterTime(GameObject obj, float time, bool enabled)
+    {
+        yield return new WaitForSeconds(time);
+
+        obj.SetActive(enabled);
+    }
+
+    public static IEnumerator LerpScale(Transform obj, Vector3 endScale, float time, whatFuncToUse func)
+    {
+        Vector3 startScale = obj.transform.localScale;
+        float t = 0f;
+
+        while (t < time)
+        {
+            t += Time.deltaTime;
+
+            obj.transform.localScale = Vector3.Lerp(startScale, endScale, func(0f, 1f, t / time));
+
+            yield return null;
+        }
+
+        obj.transform.localScale = endScale;
+    }
+
     public static IEnumerator lerpTextInt(Text text, int from, int to, float time, whatFuncToUse easingFunc, float waitTime = 0f)
     {
         float t = 0f;

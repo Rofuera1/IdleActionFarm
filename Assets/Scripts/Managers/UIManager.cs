@@ -1,18 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class UIManager : MonoBehaviour
+namespace Game
 {
-    // Start is called before the first frame update
-    void Start()
+    public class UIManager : MonoBehaviour
     {
-        
-    }
+        public Text GrassCapacity;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public void UpdateGrassCapacity(int newCapacityCurrent, int maxCapacity)
+        {
+            GrassCapacity.text = newCapacityCurrent.ToString() + "/" + maxCapacity.ToString();
+        }
     }
 }
