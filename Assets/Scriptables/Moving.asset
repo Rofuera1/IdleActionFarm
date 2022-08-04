@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Moving
   m_EditorClassIdentifier: 
   Sensivity: 1.3
-  BoundsMaxCoordinates: {x: 20, y: 0, z: 40}
+  BoundsMaxCoordinates: {x: 20, y: 0, z: 50}
   BoundsMinCoordinates: {x: -20, y: 0, z: 5}

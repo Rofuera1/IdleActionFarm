@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Stats
   m_EditorClassIdentifier: 
   PlayerMaxGrassCapacity: 20
-  GoldForSingleGrass: 5
-  SecondsForGrassToRegrow: 15
+  GoldForSingleGrass: 15
+  SecondsForGrassToRegrow: 30
