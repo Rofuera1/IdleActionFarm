@@ -10,9 +10,9 @@ namespace Game
         [SerializeField] private PlayerMoverManager Mover;
         [SerializeField] private PlayerHandler Player;
         [SerializeField] private PlayerInfoReceiver Info;
-        [SerializeField] private IterationLogicManager Logic;
         [SerializeField] private UIManager UI;
         [SerializeField] private GrassManager GrassManage;
+        [SerializeField] private Shop ShopManager;
         [Space(10)]
         [SerializeField] private StatsProperty Stats;
 
@@ -20,9 +20,10 @@ namespace Game
         {
             Mover.Init(Input);
             Player.Init(Stats.PlayerMaxGrassCapacity, Info);
-            Info.Init(Logic, Player, Stats);
-            Logic.Init(UI, Stats);
+            Info.Init(Player, Stats);
+            ShopManager.Init(Stats);
             GrassManage.Init(Stats.SecondsForGrassToRegrow);
+            UI.Init(Stats);
 
             Destroy(this);
         }

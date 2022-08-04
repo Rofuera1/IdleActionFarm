@@ -11,7 +11,7 @@ namespace Game
         private PlayerInfoReceiver playerManager;
         [Space]
         public Scythe ScytheScript;
-        private Grass _grassCollidedWith;
+        public Transform LocalScytheEndPosition;
 
         private Vector3 grassPrefabSize;
         private Stack<GameObject> placedGrassStack;
@@ -20,7 +20,6 @@ namespace Game
         {
             placedGrassStack = new Stack<GameObject>(maxGrassCapacity);
             grassPrefabSize = GrassToPlaceBehindPrefab.GetComponent<BoxCollider>().size;
-            Debug.Log("GRASS_BEHIND_SIZE_IS_" + grassPrefabSize);
             playerManager = PlayerManager;
             ScytheScript.Init(this);
         }
@@ -29,6 +28,8 @@ namespace Game
         {
             if (other.GetComponent<Grass>())
                 playerManager.PlayerCollidedWithFullGrass(other.GetComponent<Grass>());
+            else if (other.GetComponent<Shop>())
+                playerManager.PlayerCollidedWithShop(other.GetComponent<Shop>());
         }
 
         private void OnCollisionEnter(Collision collision)
@@ -37,16 +38,34 @@ namespace Game
                 playerManager.PlayerCollidedWithCuttedGrass(collision.gameObject);
         }
 
-        public void ActivateScythe(Grass grassToCut, bool cutAtHalfNotFull)
+        private void OnTriggerExit(Collider other)
         {
-            ScytheScript.Cut(grassToCut);
+            if (other.GetComponent<Grass>())
+                playerManager.PlayerStoppedCollidingWithFullGrass(other.GetComponent<Grass>());
+            else if (other.GetComponent<Shop>())
+                playerManager.PlayerStoppedCollidingWithShop();
+        }
+
+        public void ActivateScythe()
+        {
+            ScytheScript.ActivateScythe();
+        }
+
+        public void DeactivateScythe()
+        {
+            ScytheScript.DeactivateScythe();
         }
 
         public void GrassCuttedWithResult(Grass grassCutted, GameObject grassAtGround, GameObject grassToCollect)
         {
-            if (grassCutted.isAnyLeft) grassCutted.GrassHaveBeenCuttedFull();
-            else grassCutted.GrassHaveBeenCuttedHalf(grassAtGround);
+            if(!grassToCollect)
+            {
+                playerManager.PlayerFailedToCutGrass();
+                return;
+            }
 
+            DeactivateScythe();
+            grassCutted.GrassHaveBeenCuttedFull(grassAtGround);
             playerManager.PlayerCuttedGrass(grassToCollect);
         }
 
@@ -64,7 +83,9 @@ namespace Game
 
         public GameObject RemoveGrassFromTopAtPlayer()
         {
-            return placedGrassStack.Pop();
+            GameObject toReturn = placedGrassStack.Pop();
+            toReturn.transform.parent = null;
+            return toReturn;
         }
     }
 }

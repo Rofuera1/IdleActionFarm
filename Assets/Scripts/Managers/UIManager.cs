@@ -7,11 +7,26 @@ namespace Game
 {
     public class UIManager : MonoBehaviour
     {
-        public Text GrassCapacity;
+        protected static UIManager Instance;
 
-        public void UpdateGrassCapacity(int newCapacityCurrent, int maxCapacity)
+        public Text GrassCapacity;
+        public Text MoneyAmount;
+
+        public void Init(StatsProperty stats)
         {
-            GrassCapacity.text = newCapacityCurrent.ToString() + "/" + maxCapacity.ToString();
+            Instance = this;
+            UpdateGrassCapacity(0, stats.PlayerMaxGrassCapacity);
+            AddedMoney(0);
+        }
+
+        public static void UpdateGrassCapacity(int newCapacityCurrent, int maxCapacity)
+        {
+            Instance.GrassCapacity.text = newCapacityCurrent.ToString() + "/" + maxCapacity.ToString();
+        }
+
+        public static void AddedMoney(int moneyAddedAmount)
+        {
+            Instance.MoneyAmount.text = moneyAddedAmount.ToString();
         }
     }
 }

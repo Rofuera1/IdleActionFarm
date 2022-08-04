@@ -7,30 +7,24 @@ namespace Game
     public class Grass : MonoBehaviour
     {
         [SerializeField] private GameObject FullGrassPrafab;
+        [SerializeField] private BoxCollider TriggerCollider;
 
-        private GameObject grassLeftover;
-        public bool isAnyLeft => grassLeftover;
-        public bool isGrassFull { get; private set; }
-        public GameObject GrassGameobjectForCutting => grassLeftover;
+        public bool isAnyLeft => GrassGameobjectForCutting;
+        public GameObject GrassGameobjectForCutting { get; private set; }
+        private GameObject GrassLeftAfterCutting;
 
         public void CreateFullGrass()
         {
-            if (grassLeftover) Destroy(grassLeftover);
-            grassLeftover = Instantiate(FullGrassPrafab, transform);
-            isGrassFull = true;
+            if (GrassLeftAfterCutting) Destroy(GrassLeftAfterCutting);
+            GrassGameobjectForCutting = Instantiate(FullGrassPrafab, transform);
+            TriggerCollider.enabled = true;
         }
 
-        public void GrassHaveBeenCuttedHalf(GameObject objectToLeave)
+        public void GrassHaveBeenCuttedFull(GameObject grassLeft)
         {
-            grassLeftover = objectToLeave;
-            grassLeftover.AddComponent<MeshCollider>().convex = true;
-            isGrassFull = false;
-        }
-
-        public void GrassHaveBeenCuttedFull()
-        {
-            grassLeftover = null;
-            isGrassFull = false;
+            GrassLeftAfterCutting = grassLeft;
+            GrassGameobjectForCutting = null;
+            TriggerCollider.enabled = false;
         }
     }
 }

@@ -8,13 +8,39 @@ namespace Game
     public class Scythe : MonoBehaviour
     {
         private PlayerHandler player;
+        private bool active;
+
         public void Init(PlayerHandler Player)
         {
             player = Player;
         }
 
-        public void Cut(Grass grass)
+        private void OnTriggerEnter(Collider other)
         {
+            if (!active) return;
+
+            if (other.GetComponent<Grass>())
+            {
+                tryToCut(other.GetComponent<Grass>());
+            }
+        }
+
+        public void ActivateScythe()
+        {
+            active = true;
+            GetComponent<MeshRenderer>().enabled = true;
+        }
+
+        public void DeactivateScythe()
+        {
+            active = false;
+            GetComponent<MeshRenderer>().enabled = false;
+        }
+
+        private void tryToCut(Grass grass)
+        {
+            if (!grass.isAnyLeft) return;
+
             GameObject grassToCollect, grassToKeep;
             cutGrass(grass, transform.position, out grassToKeep, out grassToCollect);
 
@@ -52,7 +78,6 @@ namespace Game
             higherHull.transform.localRotation = neededTransform.localRotation;
 
             Destroy(grassToCut.GrassGameobjectForCutting);
-            Debug.Log("GRASS_CUTTED");
         }
     }
 }
