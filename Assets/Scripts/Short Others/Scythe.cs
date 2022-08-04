@@ -28,13 +28,11 @@ namespace Game
         public void ActivateScythe()
         {
             active = true;
-            GetComponent<MeshRenderer>().enabled = true;
         }
 
         public void DeactivateScythe()
         {
             active = false;
-            GetComponent<MeshRenderer>().enabled = false;
         }
 
         private void tryToCut(Grass grass)

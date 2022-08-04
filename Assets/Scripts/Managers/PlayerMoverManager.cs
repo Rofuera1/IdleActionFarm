@@ -28,7 +28,10 @@ namespace Game
         private void movingReceived(Vector2 moveDelta)
         {
             Vector3 deltaForMoving = new Vector3(moveDelta.x, 0f, moveDelta.y) * MovingInfo.Sensivity;
-            Vector3 newPosition = PlayerTransform.position + deltaForMoving * MovingInfo.MovingSpeed;
+            Vector3 newPosition = PlayerTransform.position + deltaForMoving;
+
+            newPosition.x = Mathf.Clamp(newPosition.x, MovingInfo.BoundsMinCoordinates.x, MovingInfo.BoundsMaxCoordinates.x);
+            newPosition.z = Mathf.Clamp(newPosition.z, MovingInfo.BoundsMinCoordinates.z, MovingInfo.BoundsMaxCoordinates.z);
 
             PlayerTransform.LookAt(newPosition);
             preferrablePosition = newPosition;

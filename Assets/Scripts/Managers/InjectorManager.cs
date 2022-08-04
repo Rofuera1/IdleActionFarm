@@ -13,6 +13,8 @@ namespace Game
         [SerializeField] private UIManager UI;
         [SerializeField] private GrassManager GrassManage;
         [SerializeField] private Shop ShopManager;
+        [SerializeField] private PlayerAnimatorManager PlayerAnimator;
+        [SerializeField] private Camera MainCamera;
         [Space(10)]
         [SerializeField] private StatsProperty Stats;
 
@@ -20,10 +22,10 @@ namespace Game
         {
             Mover.Init(Input);
             Player.Init(Stats.PlayerMaxGrassCapacity, Info);
-            Info.Init(Player, Stats);
-            ShopManager.Init(Stats);
+            Info.Init(Player, Input, PlayerAnimator, Stats);
+            ShopManager.Init(Stats, Player.transform);
             GrassManage.Init(Stats.SecondsForGrassToRegrow);
-            UI.Init(Stats);
+            UI.Init(Stats, MainCamera);
 
             Destroy(this);
         }

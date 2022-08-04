@@ -98,7 +98,25 @@ public static class Coroutines
         obj.transform.localScale = endScale;
     }
 
-    public static IEnumerator lerpTextInt(Text text, int from, int to, float time, whatFuncToUse easingFunc, float waitTime = 0f)
+    public static IEnumerator LerpTextIntWithParse(Text text, int to, float time, whatFuncToUse easingFunc, float waitTime = 0f)
+    {
+        float t = 0f;
+        int from = int.Parse(text.text);
+        yield return new WaitForSeconds(waitTime);
+
+        while (t < time)
+        {
+            t += Time.deltaTime;
+
+            text.text = ((int)Mathf.Lerp(from, to, easingFunc(0f, 1f, t / time))).ToString();
+
+            yield return null;
+        }
+
+        text.text = to.ToString();
+    }
+
+    public static IEnumerator LerpTextInt(Text text, int from, int to, float time, whatFuncToUse easingFunc, float waitTime = 0f)
     {
         float t = 0f;
         yield return new WaitForSeconds(waitTime);

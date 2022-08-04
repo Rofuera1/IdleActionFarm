@@ -11,15 +11,14 @@ namespace Game
         private PlayerInfoReceiver playerManager;
         [Space]
         public Scythe ScytheScript;
-        public Transform LocalScytheEndPosition;
 
-        private Vector3 grassPrefabSize;
+        private float grassPrefabHalfHeight;
         private Stack<GameObject> placedGrassStack;
 
         public void Init(int maxGrassCapacity, PlayerInfoReceiver PlayerManager)
         {
             placedGrassStack = new Stack<GameObject>(maxGrassCapacity);
-            grassPrefabSize = GrassToPlaceBehindPrefab.GetComponent<BoxCollider>().size;
+            grassPrefabHalfHeight = GrassToPlaceBehindPrefab.GetComponent<MeshRenderer>().bounds.size.x * 0.5f;
             playerManager = PlayerManager;
             ScytheScript.Init(this);
         }
@@ -32,18 +31,18 @@ namespace Game
                 playerManager.PlayerCollidedWithShop(other.GetComponent<Shop>());
         }
 
-        private void OnCollisionEnter(Collision collision)
-        {
-            if (collision.transform.tag == "CuttedGrassAtGround")
-                playerManager.PlayerCollidedWithCuttedGrass(collision.gameObject);
-        }
-
         private void OnTriggerExit(Collider other)
         {
             if (other.GetComponent<Grass>())
                 playerManager.PlayerStoppedCollidingWithFullGrass(other.GetComponent<Grass>());
             else if (other.GetComponent<Shop>())
                 playerManager.PlayerStoppedCollidingWithShop();
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            if (collision.transform.tag == "CuttedGrassAtGround")
+                playerManager.PlayerCollidedWithCuttedGrass(collision.gameObject);
         }
 
         public void ActivateScythe()
@@ -67,12 +66,15 @@ namespace Game
             DeactivateScythe();
             grassCutted.GrassHaveBeenCuttedFull(grassAtGround);
             playerManager.PlayerCuttedGrass(grassToCollect);
+            GrassManager.AssignMaterialsToCuttedGrass(grassAtGround.GetComponent<MeshRenderer>(), grassToCollect.GetComponent<MeshRenderer>());
         }
+
+        // Если вы читаете этот комментарий, то знайте: данную работу выполнил Рыбин Роман. Мир полон лживых обманщиков!
 
         public Vector3 AddSingleGrassToPlayer(int grassNumber)
         {
             GameObject newGrass = Instantiate(GrassToPlaceBehindPrefab, PlaceGrassTR);
-            Vector3 newGrassLocalPosition = new Vector3(0f, grassPrefabSize.x * grassNumber * 0.5f, 0f);
+            Vector3 newGrassLocalPosition = new Vector3(0f, grassPrefabHalfHeight * grassNumber * 0.5f, 0f);
 
             newGrass.transform.parent = PlaceGrassTR;
             newGrass.transform.localPosition = newGrassLocalPosition;

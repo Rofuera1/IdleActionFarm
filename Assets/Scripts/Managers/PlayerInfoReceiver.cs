@@ -17,40 +17,51 @@ namespace Game
         protected static PlayerInfoReceiver Instance;
 
         private PlayerHandler player;
+        private PlayerAnimatorManager playerAnimator;
         private StatsProperty stats;
 
         private int grassMaxCapacity;
         private int grassCurrentCapacity;
 
-        private Grass grassCurrentlyCollidingWith;
-
         public PlayerState currentPlayerState;
 
-        public void Init(PlayerHandler Player, StatsProperty Stats)
+        public void Init(PlayerHandler Player, InputManager input, PlayerAnimatorManager playerAnim, StatsProperty Stats)
         {
             Instance = this;
 
             player = Player;
             stats = Stats;
+            playerAnimator = playerAnim;
             grassMaxCapacity = stats.PlayerMaxGrassCapacity;
+
+            input.Moving += PlayerWalking;
+            input.StoppedMoving += PlayerStoppedWalking;
 
             currentPlayerState = PlayerState.Moving;
         }
 
+        public void PlayerWalking(Vector2 delta)
+        {
+            playerAnimator.Walking(true);
+        }
+
+        public void PlayerStoppedWalking(Vector2 delta)
+        {
+            playerAnimator.Walking(false);
+        }
+
         public void PlayerCollidedWithFullGrass(Grass grass)
         {
-            if (grass.isAnyLeft)
-            {
-                player.ActivateScythe();
-                grassCurrentlyCollidingWith = grass;
-            }
+            if (!grass.isAnyLeft) return;
+
+            playerAnimator.Cut();
+            player.ActivateScythe();
         }
 
         public void PlayerStoppedCollidingWithFullGrass(Grass grass)
         {
-            if(!grass.isAnyLeft && !grassCurrentlyCollidingWith.isAnyLeft)
-                player.DeactivateScythe();
-            grassCurrentlyCollidingWith = grass;
+            playerAnimator.StopCutting();
+            player.DeactivateScythe();
         }
 
         public void PlayerCollidedWithCuttedGrass(GameObject grassLeftower)
@@ -87,6 +98,8 @@ namespace Game
             grassToCollect.tag = "CuttedGrassAtGround";
             grassToCollect.AddComponent<MeshCollider>().convex = true;
             grassToCollect.AddComponent<Rigidbody>();
+
+            playerAnimator.StopCutting();
         }
 
         public void PlayerFailedToCutGrass()

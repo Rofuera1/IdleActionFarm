@@ -8,6 +8,7 @@ namespace Game
     {
         public delegate void Move(Vector2 movementDelta);
         public Move Moving;
+        public Move StoppedMoving;
 
         public Joystick JoystickController;
 
@@ -15,6 +16,8 @@ namespace Game
         {
             if (JoystickController.Direction != Vector2.zero)
                 Moving?.Invoke(JoystickController.Direction);
+            else
+                StoppedMoving?.Invoke(Vector2.zero);
         }
     }
 }

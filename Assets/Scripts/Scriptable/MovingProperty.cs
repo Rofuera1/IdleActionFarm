@@ -6,5 +6,6 @@ using UnityEngine;
 public class MovingProperty : ScriptableObject
 {
     public float Sensivity;
-    public float MovingSpeed;
+    public Vector3 BoundsMaxCoordinates;
+    public Vector3 BoundsMinCoordinates;
 }

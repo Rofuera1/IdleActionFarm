@@ -9,11 +9,13 @@ namespace Game
     {
         private int goldForSingleGrassCost;
         private int currentGoldAmount;
+        private Transform playerPosition;
 
-        public void Init(StatsProperty stats)
+        public void Init(StatsProperty stats, Transform playerTR)
         {
             currentGoldAmount = 0;
             goldForSingleGrassCost = stats.GoldForSingleGrass;
+            playerPosition = playerTR;
         }
 
         public void ReceiveGrassForSelling(GameObject grassObject)
@@ -33,7 +35,7 @@ namespace Game
         private void changeGoldAmount(int newAmount)
         {
             currentGoldAmount = newAmount;
-            UIManager.AddedMoney(currentGoldAmount);
+            UIManager.AddedMoney(currentGoldAmount, playerPosition.position);
         }
     }
 }

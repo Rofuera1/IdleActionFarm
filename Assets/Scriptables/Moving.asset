@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ae1d5b5840064548b1bef8b38dab3cb, type: 3}
   m_Name: Moving
   m_EditorClassIdentifier: 
-  Sensivity: 1
-  MovingSpeed: 1
+  Sensivity: 1.3
+  BoundsMaxCoordinates: {x: 20, y: 0, z: 40}
+  BoundsMinCoordinates: {x: -20, y: 0, z: 5}

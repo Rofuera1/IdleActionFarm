@@ -9,22 +9,25 @@ namespace Game
         [SerializeField] private GameObject FullGrassPrafab;
         [SerializeField] private BoxCollider TriggerCollider;
 
-        public bool isAnyLeft => GrassGameobjectForCutting;
+        public bool isAnyLeft { get => GrassGameobjectForCutting!= null; }
         public GameObject GrassGameobjectForCutting { get; private set; }
         private GameObject GrassLeftAfterCutting;
+
+        public delegate void GrassDestroyedCallback(Grass grass);
+        public GrassDestroyedCallback GrassDestroyed;
 
         public void CreateFullGrass()
         {
             if (GrassLeftAfterCutting) Destroy(GrassLeftAfterCutting);
             GrassGameobjectForCutting = Instantiate(FullGrassPrafab, transform);
-            TriggerCollider.enabled = true;
         }
 
         public void GrassHaveBeenCuttedFull(GameObject grassLeft)
         {
             GrassLeftAfterCutting = grassLeft;
             GrassGameobjectForCutting = null;
-            TriggerCollider.enabled = false;
+
+            GrassDestroyed?.Invoke(this);
         }
     }
 }
